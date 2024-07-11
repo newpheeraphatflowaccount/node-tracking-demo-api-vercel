@@ -3,8 +3,6 @@ const express = require('express');
 const app = express();
 const PORT = 4000;
 
-// const email = 'pheeraphat_p@flowaccount.com'; 
-const email = 'flowaccount_test@flowaccount.com'; 
 const searchApiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts/search';
 const contactApiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts';
 const meetingApiUrl = 'https://api.hubapi.com/crm/v3/objects/MEETING/batch/read';
@@ -17,38 +15,36 @@ const config = {
   },
 };
 
-const searchBody = {
-  filterGroups: [
-    {
-      filters: [
+app.use(express.json());
+
+app.post('/get-meeting-by-email', async (req, res) => {
+  try {
+    const email = req.headers['email'];
+    const meetingProperties = req.body.meetingProperties;
+    
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required in headers' });
+    }
+    
+    if (!meetingProperties || !Array.isArray(meetingProperties)) {
+      return res.status(400).json({ message: 'Meeting properties are required in body and should be an array' });
+    }
+
+    // Search for contact by email
+    const searchBody = {
+      filterGroups: [
         {
-          propertyName: 'email',
-          operator: 'EQ',
-          value: email,
+          filters: [
+            {
+              propertyName: 'email',
+              operator: 'EQ',
+              value: email,
+            },
+          ],
         },
       ],
-    },
-  ],
-};
-
-const meetingProperties = [
-  "hs_meeting_start_time",
-  "hs_meeting_end_time",
-  "hs_meeting_outcome",
-  "hs_meeting_title",
-  "hs_meeting_external_url",
-  "hs_timestamp",
-  "hubspot_owner_id",
-  "hs_meeting_body",
-  "hs_internal_meeting_notes",
-  "hs_meeting_location",
-  "hs_activity_type",
-  "hs_attachment_ids"
-];
-
-app.get('/search-contact-by-id', async (req, res) => {
-  try {
-    // Search for contact by email
+    };
+    
     const searchResponse = await axios.post(searchApiUrl, searchBody, config);
     const results = searchResponse.data.results;
     
