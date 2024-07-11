@@ -17,13 +17,13 @@ const config = {
 
 app.use(express.json());
 
-app.post('/get-meeting-by-email', async (req, res) => {
+app.post('/search-contact-by-id', async (req, res) => {
   try {
-    const email = req.headers['email'];
+    const email = req.body.email;
     const meetingProperties = req.body.meetingProperties;
     
     if (!email) {
-      return res.status(400).json({ message: 'Email is required in headers' });
+      return res.status(400).json({ message: 'Email is required in body' });
     }
     
     if (!meetingProperties || !Array.isArray(meetingProperties)) {
