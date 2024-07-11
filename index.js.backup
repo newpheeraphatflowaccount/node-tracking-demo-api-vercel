@@ -1,0 +1,44 @@
+const axios = require('axios');
+
+const email = 'pheeraphat_p@flowaccount.com';  // Replace with the email you want to search for
+
+const apiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts/search';
+const bearerToken = 'pat-na1-577d3958-9ac8-4d6e-af18-b2f04799d96e';
+
+const config = {
+  headers: {
+    'Authorization': `Bearer ${bearerToken}`,
+    'Content-Type': 'application/json',
+  },
+};
+
+const body = {
+  filterGroups: [
+    {
+      filters: [
+        {
+          propertyName: 'email',
+          operator: 'EQ',
+          value: email,
+        },
+      ],
+    },
+  ],
+};
+
+axios.post(apiUrl, body, config)
+  .then(response => {
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    if (error.response) {
+      // Server-side error
+      console.error('Error response:', error.response.status, error.response.data);
+    } else if (error.request) {
+      // Client-side error
+      console.error('No response received:', error.request);
+    } else {
+      // Other errors
+      console.error('Error message:', error.message);
+    }
+  });
