@@ -1,8 +1,9 @@
 const express = require('express')
+const axios = require('axios')
 const app = express()
 const PORT = 4000
 
-const email = 'pheeraphat_p@flowaccount.com';  // Replace with the email you want to search for
+const email = 'pheeraphat_p@flowaccount.com'; 
 const apiUrl = 'https://api.hubapi.com/crm/v3/objects/contacts/search';
 const bearerToken = 'pat-na1-577d3958-9ac8-4d6e-af18-b2f04799d96e';
 
